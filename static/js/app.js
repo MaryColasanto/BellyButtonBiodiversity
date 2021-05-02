@@ -55,9 +55,9 @@ d3.json("../../data/samples.json").then((data) => {
     var demographics = d3.select(".panel-body");
     
     data.metadata.forEach(function (value) {
-        var num = value.id.toString()
+        var ID = value.id.toString()
         
-        if (num === "940") {
+        if (ID === "940") {
             
             var p = demographics.append("p");
             p.attr("value", value.id);
@@ -90,5 +90,106 @@ d3.json("../../data/samples.json").then((data) => {
         };
     
     });
+    // update demographic and graphs based on dropdown choice
+    d3.selectAll("#selDataset").on("change", optionChanged);
+
+    function optionChanged() {
+
+        // clear demographics
+        var panelBody = d3.select(".panel-body");
+
+        panelBody.html("")
+        
+        //use d3 to select the dropdown menu
+        var dropDownMenu = d3.selectAll("#selDataset");
+
+        // assign selection to a variable
+        var newID = dropDownMenu.property("value");
+
+        data.samples.forEach(function(value) {
+            if (value.id === newID) {
+
+                var yAxis = value.otu_ids.map(y => "OTU ID:" + y);
+                
+                var trace1 = {
+                    x: value.sample_values.slice(0,10).reverse(),
+                    y: yAxis.slice(0,10).reverse(),
+                    type: "bar", 
+                    orientation: "h",
+                    text: value.otu_labels.slice(0,10).reverse(),
+                };
+        
+                plot = [trace1];
+                Plotly.newPlot("bar", plot)
+            };
+        });
+    
+        // create bubble chart
+        data.samples.forEach(function(value) {
+            if (value.id === newID) {
+                var tracebubbleChoice = {
+                    x: value.otu_ids.slice(0,10),
+                    y: value.sample_values.slice(0,10),
+                    mode: 'markers',
+                    marker: {
+                      color: value.otu_ids,
+                      size: value.sample_values.map(d=>(d/3))
+                    },
+                    text: value.otu_labels.slice(0,10)
+                  };
+
+                  layout = {
+                    xaxis: { title: "OTU ID" }
+    
+                };
+
+                plotBubbleChoice = [tracebubbleChoice];
+                Plotly.newPlot("bubble", plotBubbleChoice, layout)
+            };
+        });
+
+        // populate the demographic info in the table upon change
+        var demographics = d3.select(".panel-body");
+
+        data.metadata.forEach(function (value) {
+            var ID = value.id.toString()
+            
+            if (ID === newID) {
+                
+                var p = demographics.append("p");
+                p.attr("value", value.id);
+                p.text("Test Subject ID:" + " " + value.id);
+
+                var p = demographics.append("p");
+                p.attr("value", value.ethnicity);
+                p.text("Ethnicity:" + " " + value.ethnicity);
+
+                var p = demographics.append("p");
+                p.attr("value", value.gender);
+                p.text("Gender:" + " " + value.gender);
+
+                var p = demographics.append("p");
+                p.attr("value", value.age);
+                p.text("Age:" + " " + value.age);
+
+                var p = demographics.append("p");
+                p.attr("value", value.location);
+                p.text("Location:" + " " + value.location);
+
+                var p = demographics.append("p");
+                p.attr("value", value.bbtype);
+                p.text("Belly Button Type:" + " " + value.bbtype);
+
+                var p = demographics.append("p");
+                p.attr("value", value.wfreq);
+                p.text("Wash Frequency:" + " " + value.wfreq);
+            
+            };
+        
+        });
+        
+    };
+
 });
+
 
