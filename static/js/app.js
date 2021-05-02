@@ -41,7 +41,7 @@ d3.json("../../data/samples.json").then((data) => {
             };
 
             layout = {
-                title: "title of this plot"
+                xaxis: { title: "OTU ID" }
 
             };
 
@@ -61,7 +61,7 @@ d3.json("../../data/samples.json").then((data) => {
             
             var p = demographics.append("p");
             p.attr("value", value.id);
-            p.text("ID:" + " " + value.id);
+            p.text("Test Subject ID:" + " " + value.id);
 
             var p = demographics.append("p");
             p.attr("value", value.ethnicity);
