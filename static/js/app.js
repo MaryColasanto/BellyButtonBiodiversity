@@ -1,5 +1,6 @@
 d3.json("../../data/samples.json").then((data) => {
 
+    // add data to the dropdown menu
     var dropDown = d3.select("#selDataset");
     data.names.forEach(function(value) {
         var option = dropDown.append("option");
@@ -7,9 +8,11 @@ d3.json("../../data/samples.json").then((data) => {
         option.text(value);
     });
 
+    // plot the default data (940) when the page loads
     data.samples.forEach(function(value) {
         if (value.id === "940") {
             var yAxis = value.otu_ids.map(y => "OTU ID:" + y);
+            // bar chart
             var traceBarDefault = {
                 x: value.sample_values.slice(0,10).reverse(),
                 y: yAxis.slice(0,10).reverse(),
@@ -25,6 +28,7 @@ d3.json("../../data/samples.json").then((data) => {
             plotDefault = [traceBarDefault];
             Plotly.newPlot("bar", plotDefault, layout)
 
+            // bubble chart
             var traceBubbleDefault = {
                 x: value.otu_ids,
                 y: value.sample_values,
@@ -48,12 +52,43 @@ d3.json("../../data/samples.json").then((data) => {
 
     });
 
-    // var demoInfo = d3.select("panel-body");
-    // data.metadata.forEach(function(value) {
-    //     var number = value.id.toString()
-    //     if (number === "940") {
-    //         var 
-    //     }
-    // })
+    var demographics = d3.select(".panel-body");
+    
+    data.metadata.forEach(function (value) {
+        var num = value.id.toString()
+        
+        if (num === "940") {
+            
+            var p = demographics.append("p");
+            p.attr("value", value.id);
+            p.text("ID:" + " " + value.id);
+
+            var p = demographics.append("p");
+            p.attr("value", value.ethnicity);
+            p.text("Ethnicity:" + " " + value.ethnicity);
+
+            var p = demographics.append("p");
+            p.attr("value", value.gender);
+            p.text("Gender:" + " " + value.gender);
+
+            var p = demographics.append("p");
+            p.attr("value", value.age);
+            p.text("Age:" + " " + value.age);
+
+            var p = demographics.append("p");
+            p.attr("value", value.location);
+            p.text("Location:" + " " + value.location);
+
+            var p = demographics.append("p");
+            p.attr("value", value.bbtype);
+            p.text("Belly Button Type:" + " " + value.bbtype);
+
+            var p = demographics.append("p");
+            p.attr("value", value.wfreq);
+            p.text("Wash Frequency:" + " " + value.wfreq);
+        
+        };
+    
+    });
 });
 
