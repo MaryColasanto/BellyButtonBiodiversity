@@ -133,7 +133,7 @@ d3.json("../../data/samples.json").then((data) => {
                     mode: 'markers',
                     marker: {
                       color: value.otu_ids,
-                      size: value.sample_values.map(d=>(d/3))
+                      size: value.sample_values.map(d=>(d/2))
                     },
                     text: value.otu_labels.slice(0,10)
                   };
